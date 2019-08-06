@@ -1,0 +1,69 @@
+# Database settings.
+database:
+  driverClass: com.mysql.jdbc.Driver
+  user: root
+  password: root
+  url: jdbc:mysql://localhost:3306/biztaker
+
+
+server:
+  rootPath: /api
+  applicationConnectors:
+    - type: http
+      port: 8080
+    - type: https
+      port: 8443
+      keyStorePath: biztaker.keystore
+      keyStorePassword: example
+      validateCerts: false
+      validatePeers: false
+  adminConnectors:
+    - type: http
+      port: 8081
+    - type: https
+      port: 8444
+      keyStorePath: biztaker.keystore
+      keyStorePassword: example
+      validateCerts: false
+      validatePeers: false
+
+
+# Responsible for assets folder outside of jar 
+assets:
+  overrides:
+    /: externalwebapp
+
+
+# Logging settings.
+logging:
+  level: INFO
+  loggers:
+    com.bt.biztaker: INFO
+    org.hibernate:
+      level: WARN
+
+# Logback's Time Based Rolling Policy - archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}.log.gz
+# Logback's Size and Time Based Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
+# Logback's Fixed Window Rolling Policy -  archivedLogFilenamePattern: /tmp/application-%i.log.gz
+
+  appenders:
+    - type: console
+    - type: file
+      threshold: INFO
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: /tmp/application.log
+      archivedLogFilenamePattern: /tmp/application-%d{yyyy-MM-dd}-%i.log.gz
+      archivedFileCount: 7
+      timeZone: UTC
+      maxFileSize: 10MB
+
+
+jwtCookieAuth:
+  secretSeed: null
+  secure: false
+  httpOnly: true
+  sessionExpiryVolatile: PT30m
+  sessionExpiryPersistent: P7d
+
+configProperties:
+  myProperty: hello from yml

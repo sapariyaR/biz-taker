@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet id="1" author="ravi_sapariya">
+		<createTable tableName="users">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="email" type="varchar(60)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="password" type="varchar(100)">
+				<constraints nullable="false" />
+			</column>
+			<column name="role" type="varchar(20)">
+				<constraints nullable="false" />
+			</column>
+			<column name="isEnable" type="boolean">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="updated_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createTable tableName="person">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="first_name" type="varchar(100)" />
+			<column name="last_name" type="varchar(100)" />
+			<column name="gender" type="int(5)"></column>
+			<column name="birth_date" type="bigint(50)"></column>
+			<column name="latitude" type="double(100)"></column>
+			<column name="longitude" type="double(100)"></column>
+			<column name="address" type="varchar(200)"></column>
+			<column name="token" type="varchar(500)"></column>
+			<column name="user_id" type="bigint">
+				<constraints foreignKeyName="FK_user_id" references="users(id)" />
+			</column>
+			<column name="updated_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="dp_url" type="varchar(100)"></column>
+		</createTable>
+		<createTable tableName="company">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="company_name" type="varchar(100)" />
+			<column name="company_address" type="varchar(500)" />
+			<column name="latitude" type="double(100)"></column>
+			<column name="longitude" type="double(100)"></column>
+		</createTable>
+		<createTable tableName="card">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="company_id" type="bigint">
+				<constraints foreignKeyName="FK_company_id" references="company(id)" />
+			</column>
+			<column name="card_title" type="varchar(100)" />
+			<column name="card_description" type="varchar(500)" />
+			<column name="mobile_number" type="int(20)" />
+			<column name="phone_number" type="int(20)" />
+			<column name="accessibility" type="int(5)"></column>
+			<column name="created_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="created_by" type="bigint">
+				<constraints nullable="false" foreignKeyName="FK_created_by"
+					references="person(id)" />
+			</column>
+			<column name="metaDatasJson" type="json"></column>
+		</createTable>
+
+		<createTable tableName="card_photo">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="photo_title" type="varchar(100)" />
+			<column name="photo_url" type="varchar(100)" />
+			<column name="photo_side" type="int(5)"></column>
+			<column name="card_id" type="bigint">
+				<constraints foreignKeyName="FK__cp_card_id" references="card(id)" />
+			</column>
+		</createTable>
+
+		<createTable tableName="person_card_mapping">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="source_owner_id" type="bigint">
+				<constraints nullable="false" foreignKeyName="FK_source_owner_id"
+					references="person(id)" />
+			</column>
+			<column name="destination_owner_id" type="bigint">
+				<constraints foreignKeyName="FK_destination_owner_id"
+					references="person(id)" />
+			</column>
+			<column name="card_id" type="bigint">
+				<constraints nullable="false" foreignKeyName="FK_mapped_card_id"
+					references="card(id)" />
+			</column>
+			<column name="latitude" type="double(100)"></column>
+			<column name="longitude" type="double(100)"></column>
+			<column name="created_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="card_nick_name" type="varchar(100)" />
+		</createTable>
+		<createTable tableName="news_subscription">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="person_id" type="bigint">
+				<constraints nullable="false" foreignKeyName="FK_ns_person_id"
+					references="person(id)" />
+			</column>
+			<column name="news_about" type="varchar(50)"></column>
+		</createTable>
+		<createTable tableName="company_transaction">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="transaction_type" type="int(5)"></column>
+			<column name="amount" type="double(100)">
+				<constraints nullable="false"></constraints>
+			</column>
+			<column name="created_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+			<column name="updated_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="2" author="ravi_sapariya">
+		<addColumn tableName="company">
+			<column name="created_by" type="bigint">
+				<constraints nullable="false" foreignKeyName="FK_c_created_by_id"
+					references="person(id)" />
+			</column>
+			<column name="created_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="3" author="ravi_sapariya">
+		<addColumn tableName="card">
+			<column name="updated_date" type="bigint(50)">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="4" author="ravi_sapariya">
+		<addColumn tableName="company">
+			<column name="metaDatasJson" type="json"></column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="5" author="ravi_sapariya">
+		<addColumn tableName="person_card_mapping">
+			<column name="sharing_type" type="int(5)">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+
+	<changeSet id="6" author="ravi_sapariya">
+		<addColumn tableName="company_transaction">
+			<column name="company_id" type="bigint">
+				<constraints nullable="false" foreignKeyName="FK_ct_company_id"
+					references="company(id)" />
+			</column>
+			<column name="trns_owner_id" type="bigint">
+				<constraints nullable="false" foreignKeyName="FK_ct_trns_owner_id"
+					references="person(id)" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="7" author="ravi_sapariya">
+		<addColumn tableName="card">
+			<column name="isMine" type="boolean">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet id="8" author="parth_bhuva">
+		<dropNotNullConstraint 
+            columnDataType="varchar(100)"
+            columnName="password"
+            tableName="users"/>
+	</changeSet>
+</databaseChangeLog>
